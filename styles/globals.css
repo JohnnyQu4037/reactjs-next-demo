@@ -79,6 +79,10 @@
   margin: 0;
 }
 
+.ant-menu-inline-collapsed-tooltip {
+  display: none;
+}
+
 html,
 body {
   max-width: 100vw;
