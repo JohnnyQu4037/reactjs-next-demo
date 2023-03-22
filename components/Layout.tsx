@@ -50,7 +50,7 @@ const StyledHeader = styled(Header)`
   justify-content: space-between;
   align-items: center;
   position: sticky;
-  padding: 0 50px;
+  padding: 0 10px;
   z-index: 10;
 `;
 
@@ -172,10 +172,11 @@ export default function AppLayout({ children }) {
           </AvatarContainer>
         </StyledHeader>
 
-        {/* <LayoutBreadcrumb /> */}
+        <LayoutBreadcrumb />
 
         <StyledContent>{children}</StyledContent>
       </Layout>
     </Layout>
   );
 }
+

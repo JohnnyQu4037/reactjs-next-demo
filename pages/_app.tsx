@@ -1,5 +1,5 @@
 import 'antd/dist/reset.css';
-import AppLayout from '../components/layout';
+import AppLayout from '../components/Layout';
 import { Spin } from 'antd';
 import type { AppProps } from 'next/app'
 

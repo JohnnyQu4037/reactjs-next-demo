@@ -1,13 +1,13 @@
 import {
   DashboardOutlined,
-  // DeploymentUnitOutlined,
-  // EditOutlined,
-  // FileAddOutlined,
-  // MessageOutlined,
-  // ProjectOutlined,
-  // ReadOutlined,
-  // SolutionOutlined,
-  // TeamOutlined,
+  DeploymentUnitOutlined,
+  EditOutlined,
+  FileAddOutlined,
+  MessageOutlined,
+  ProjectOutlined,
+  ReadOutlined,
+  SolutionOutlined,
+  TeamOutlined,
 } from "@ant-design/icons";
 import React from "react";
 
@@ -20,7 +20,7 @@ const overview = {
 const test = {
   path: "test",
   label: "Test",
-  icon: <DashboardOutlined />,
+  icon: <ProjectOutlined />,
 };
 
 
