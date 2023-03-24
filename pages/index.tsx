@@ -8,6 +8,8 @@ export interface loginRequest {
   email: string;
   password: string;
 }
+import storage from "store";
+import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } from "@/constant/enums/cache";
 
 export const FormContainer = styled.section`
   display: flex;
@@ -47,11 +49,21 @@ export default function Login() {
   const submitForm = async (request: loginRequest) => {
     setLoading(true);
     const { access_token, refresh_token, ...rest } = await login(request);
-    localStorage.setItem("access_token", JSON.stringify(access_token));
-    localStorage.setItem("refresh_token",refresh_token)
+    storage.set(ACCESS_TOKEN_KEY, access_token);
+    storage.set(REFRESH_TOKEN_KEY,refresh_token)
     setUserInfo(rest);
-    router.replace("/dashboard");
+    router.replace("/overview");
   };
+  useEffect(() => {
+    const token = storage.get(ACCESS_TOKEN_KEY)
+    if (!token) {
+      router.push("/");
+      return;
+    }
+    else{
+      router.push('/overview');
+    }
+  }, []);
 
   return (
     <>

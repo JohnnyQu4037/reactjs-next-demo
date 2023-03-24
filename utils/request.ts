@@ -1,15 +1,11 @@
-import axios, { AxiosResponse, AxiosRequestConfig, InternalAxiosRequestConfig} from "axios";
+import axios, { AxiosResponse, AxiosRequestConfig, InternalAxiosRequestConfig } from "axios";
 import storage from "store";
-// import { useUserStoreWithOut } from '@/store/modules/auth';
 import { ACCESS_TOKEN_KEY } from "@/constant/enums/cache";
-import { message as $message } from 'antd';
+import { message as $message } from "antd";
 import { HTTP_STATUS_OK, HTTP_STATUS_UNAUTHORIZED, AXIOS_TIMEOUT } from "@/constant/enums/http";
 
-const VITE_BASE_API = "https://api-rh-prospero.sigmarisk.com.au/api/v1/";
-
-const VITE_BASE_URL = "/";
-
-const VITE_DROP_CONSOLE = false;
+// const VITE_BASE_API = "https://api-rh-prospero.sigmarisk.com.au/api/v1/";
+const VITE_BASE_API = "http://47.74.91.161:5000/api/v1/";
 
 const UNKNOWN_ERROR = "unknown error!";
 
@@ -48,9 +44,10 @@ service.interceptors.response.use(
   (error) => {
     // 422 || 500
     if (error.response.status === HTTP_STATUS_UNAUTHORIZED) {
-    //   const userStore = useUserStoreWithOut();
       $message.error(error?.response?.data?.msg);
-    //   userStore.logout();
+      setTimeout(() => {
+        window.location.replace(window.location.origin);
+      }, 2000);
     } else if (error.code === AXIOS_TIMEOUT) {
       $message.error("time out!");
     } else {

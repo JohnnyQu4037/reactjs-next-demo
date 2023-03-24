@@ -1,19 +1,14 @@
-import React, { useCallback, useState } from "react";
-import { Layout, Menu, Avatar, Dropdown } from "antd";
-import {
-  MenuUnfoldOutlined,
-  MenuFoldOutlined,
-  UserOutlined,
-} from "@ant-design/icons";
+import React, { useState } from "react";
+import { Layout, Menu, MenuProps } from "antd";
+import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
 import styled from "styled-components";
-import Link from "next/link";
 import { useRouter } from "next/router";
-import { logout } from "../pages/api/api-service";
 import LayoutBreadcrumb from "./LayoutBreadcrumb";
-import { routes } from "../constant/routes";
+import AppLayoutContent from "./LayoutContent";
+import AppLayoutUserMenu from "./LayoutUserMenu";
+import { DashboardOutlined, ProjectOutlined } from "@ant-design/icons";
 
 const { Header, Sider } = Layout;
-const { SubMenu } = Menu;
 
 const Logo = styled.div`
   height: 60px;
@@ -30,19 +25,6 @@ const Logo = styled.div`
   font-family: monospace;
 `;
 
-const StyledContent = styled.div`
-  margin: 16px;
-  background-color: rgb(255, 255, 255);
-  padding: 16px;
-  min-height: auto;
-  flex:auto
-`;
-
-const AvatarContainer = styled.div`
-  display: flex;
-  flex-flow: row wrap;
-`;
-
 const StyledHeader = styled(Header)`
   top: 0;
   display: flex;
@@ -50,83 +32,29 @@ const StyledHeader = styled(Header)`
   justify-content: space-between;
   align-items: center;
   position: sticky;
-  padding: 0 10px;
+  padding: 0 22px;
   z-index: 10;
+  background: white;
 `;
 
-const findKeys = (remainingPath) => {
-  let data = routes;
-  let open = [];
-  let select = "";
-  if (remainingPath.length === 0) {
-    const result = data.filter((item) => item?.path === "");
-    select = result[0]?.label;
-  } else {
-    remainingPath.map((item) => {
-      const currentData = data.filter((i) => i.path === item)[0];
-      if (currentData?.subNav) {
-        open.push(currentData.label);
-        select = currentData.subNav.filter((i) => i.path === "")[0]?.label;
-        data = currentData?.subNav;
-      } else {
-        if (currentData?.label !== undefined) {
-          select = currentData?.label;
-        }
-      }
-    });
-  }
-  return { openKeys: open, selectKeys: select };
-};
-
-export default function AppLayout({ children }) {
+export default function AppLayout({ children }: any) {
   const router = useRouter();
   const [collapsed, setCollapsed] = useState(false);
-
-  const { openKeys, selectKeys } = findKeys(
-    router.pathname.split("/").slice(2)
-  );
-
-  const renderMenuItems = useCallback((data, parent) => {
-    return data.map((item) => {
-      if (item.subNav) {
-        return (
-          <SubMenu key={item.label} title={item.label} icon={item.icon}>
-            {renderMenuItems(item.subNav, item.path)}
-          </SubMenu>
-        );
-      } else {
-        return (
-          <Menu.Item key={item.label} title={item.label} icon={item.icon}>
-            <Link
-              href={["/dashboard", parent, item.path]
-                .filter((item) => !!item)
-                .join("/")}
-            >
-              {item.label}
-            </Link>
-          </Menu.Item>
-        );
-      }
-    });
-  }, []);
-
-  const menuItems = renderMenuItems(routes);
-
-  const logoutPopup = (
-    <Menu>
-      <Menu.Item key="logout_0" onClick={logOut}>
-        <a>Logout</a>
-      </Menu.Item>
-    </Menu>
-  );
-
-  function logOut() {
-    logout()
-      .then(() => {
-        router.push("/");
-      })
-      .catch(() => router.push("/"));
-  }
+  const sideMenuRoutes: MenuProps["items"] = [
+    {
+      label: <a onClick={() => redirect("/overview")}>Overview</a>,
+      key: "overview",
+      icon: <DashboardOutlined />,
+    },
+    {
+      label: <a onClick={() => redirect("/test")}>test</a>,
+      key: "test",
+      icon: <ProjectOutlined />,
+    },
+  ];
+  const redirect = (url: string) => {
+    router.push(url);
+  };
 
   return (
     <Layout style={{ height: "100vh" }}>
@@ -138,14 +66,7 @@ export default function AppLayout({ children }) {
         }}
       >
         <Logo>Risk Hub</Logo>
-        <Menu
-          theme="dark"
-          defaultOpenKeys={openKeys}
-          defaultSelectedKeys={[selectKeys]}
-          mode="inline"
-        >
-          {menuItems}
-        </Menu>
+        <Menu theme="dark" defaultOpenKeys={["overview"]} defaultSelectedKeys={["overview"]} items={sideMenuRoutes} mode="inline"></Menu>
       </Sider>
 
       <Layout
@@ -154,29 +75,22 @@ export default function AppLayout({ children }) {
           overflow: "auto",
         }}
       >
-        <StyledHeader className="site-layout-background">
-          {React.createElement(
-            collapsed ? MenuUnfoldOutlined : MenuFoldOutlined,
-            {
-              className: "trigger",
-              onClick: () => {
-                setCollapsed(!collapsed);
-              },
-              style: { color: "white" },
-            }
-          )}
-          <AvatarContainer>
-            <Dropdown menu={logoutPopup}>
-              <Avatar icon={<UserOutlined />} />
-            </Dropdown>
-          </AvatarContainer>
+        <StyledHeader>
+          {React.createElement(collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
+            className: "trigger",
+            onClick: () => {
+              setCollapsed(!collapsed);
+            },
+            style: { fontSize: "20px" },
+          })}
+
+          <AppLayoutUserMenu />
         </StyledHeader>
 
         <LayoutBreadcrumb />
 
-        <StyledContent>{children}</StyledContent>
+        <AppLayoutContent>{children}</AppLayoutContent>
       </Layout>
     </Layout>
   );
 }
-

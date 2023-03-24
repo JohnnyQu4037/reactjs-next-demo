@@ -1,6 +1,5 @@
 import { Breadcrumb } from "antd";
 import { useRouter } from "next/router";
-import { routes } from "../constant/routes";
 
 type breadcrumbItems = {
   title: string | undefined;
@@ -8,8 +7,7 @@ type breadcrumbItems = {
 
 export default function LayoutBreadcrumb() {
   const router = useRouter();
-  const remainingPath = router.pathname.split("/").slice(2);
-
+  const remainingPath = router.pathname.split("/").slice(1);
   const breadcrumbItems = () => {
     let extra: breadcrumbItems[] = [
       {
@@ -18,7 +16,7 @@ export default function LayoutBreadcrumb() {
     ];
     remainingPath.map((item) => {
       extra.push({
-        title: routes.find((data) => data.path === item)?.label,
+        title: item.slice(0,1).toUpperCase()+item.slice(1)
       });
     });
     return extra;
