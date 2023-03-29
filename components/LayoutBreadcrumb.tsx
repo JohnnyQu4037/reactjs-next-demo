@@ -16,13 +16,18 @@ const LayoutBreadcrumb: React.FC = () => {
     ];
     remainingPath.map((item) => {
       extra.push({
-        title: item.slice(0, 1).toUpperCase() + item.slice(1),
+        title: item
+          .split("-")
+          .map((i) => (i = i.slice(0, 1).toUpperCase() + i.slice(1)))
+          .join(" "),
       });
     });
     return extra;
   };
 
-  return <Breadcrumb items={breadcrumbItems()} style={{ padding: "16px 16px 0px 16px" }}></Breadcrumb>;
+  return (
+    <Breadcrumb items={breadcrumbItems()} style={{ padding: "16px 16px 0px 16px" }}></Breadcrumb>
+  );
 };
 
 export default LayoutBreadcrumb;

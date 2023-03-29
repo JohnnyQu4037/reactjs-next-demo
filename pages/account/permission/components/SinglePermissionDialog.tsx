@@ -59,7 +59,7 @@ const SinglePermissionDialog = forwardRef(({ role, getPermissionData }: any, ref
       };
     } catch (e) {
       console.log(e);
-      $message.error("Please input config in correct Json format");
+      $message.error("Please enter config in correct Json format");
       setLoading(false);
     }
   };
@@ -81,31 +81,29 @@ const SinglePermissionDialog = forwardRef(({ role, getPermissionData }: any, ref
 
   return (
     <>
-      <Form.Provider>
-        <Modal
-          width="800px"
-          open={visible}
-          okText={state.okText}
-          title={state.title}
-          maskClosable={false}
-          destroyOnClose
-          confirmLoading={loading}
-          onOk={() => handleOk()}
-          onCancel={() => {
-            setVisible(false);
-            form.resetFields();
-          }}
-        >
-          <Form layout="vertical" form={form}>
-            <Form.Item name="permission_name" label="Role Name" rules={[{ required: true }]}>
-              <Input />
-            </Form.Item>
-            <Form.Item name="permission" label="Permission Config" rules={[{ required: true }]}>
-              <Ace formRef={form} />
-            </Form.Item>
-          </Form>
-        </Modal>
-      </Form.Provider>
+      <Modal
+        width="800px"
+        open={visible}
+        okText={state.okText}
+        title={state.title}
+        maskClosable={false}
+        destroyOnClose
+        confirmLoading={loading}
+        onOk={() => handleOk()}
+        onCancel={() => {
+          setVisible(false);
+          form.resetFields();
+        }}
+      >
+        <Form layout="vertical" form={form}>
+          <Form.Item name="permission_name" label="Role Name" rules={[{ required: true }]}>
+            <Input />
+          </Form.Item>
+          <Form.Item name="permission" label="Permission Config" rules={[{ required: true }]}>
+            <Ace formRef={form} />
+          </Form.Item>
+        </Form>
+      </Modal>
     </>
   );
 });

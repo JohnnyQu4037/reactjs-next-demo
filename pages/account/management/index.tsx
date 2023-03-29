@@ -3,16 +3,18 @@ import { Button, Popconfirm, Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { sortString, sortDate } from "@/utils";
 import React, { useEffect, useRef, useState } from "react";
+import { getPermissions } from "@/pages/api/permission";
 import { message as $message } from "antd";
 
-// import SinglePermissionDialog from "./components/SinglePermissionDialog";
+import SingleAccountDialog from "./components/SingleAccountDialog";
 
 const Management: React.FC = () => {
   const [dataSource, setDataSource] = useState([]);
   const [loading, setLoading] = useState(false);
   const [editingData, setEditingData] = useState({});
   const [selectedUser, setSelectedUser] = useState<ACCOUNT.AccountData[]>([]);
-  const singleDialogRef = useRef<any>();
+  const singleAccountDialogRef = useRef<any>();
+  const [permissionOptions, setPermissionOptions] = useState([]);
   const columns: ColumnsType<ACCOUNT.AccountData> = [
     {
       title: "ID",
@@ -20,22 +22,23 @@ const Management: React.FC = () => {
       width: 100,
     },
     {
-      title: "Last Login",
-      dataIndex: "last_login",
-      sorter: (a: ACCOUNT.AccountData, b: ACCOUNT.AccountData) => sortDate(a.last_login || "", b.last_login || ""),
-      width: 300,
+      title: "User Name",
+      dataIndex: "username",
+      width: 200,
     },
     {
       title: "First Name",
       dataIndex: "first_name",
-      sorter: (a: ACCOUNT.AccountData, b: ACCOUNT.AccountData) => sortString(a.first_name || "", b.first_name || ""),
-      width: 300,
+      sorter: (a: ACCOUNT.AccountData, b: ACCOUNT.AccountData) =>
+        sortString(a.first_name || "", b.first_name || ""),
+      width: 200,
     },
     {
       title: "Last Name",
       dataIndex: "last_name",
-      sorter: (a: ACCOUNT.AccountData, b: ACCOUNT.AccountData) => sortString(a.last_name || "", b.last_name || ""),
-      width: 300,
+      sorter: (a: ACCOUNT.AccountData, b: ACCOUNT.AccountData) =>
+        sortString(a.last_name || "", b.last_name || ""),
+      width: 200,
     },
     {
       title: "Email",
@@ -50,7 +53,7 @@ const Management: React.FC = () => {
         { text: "InActive", value: false },
       ],
       onFilter: (value, record: ACCOUNT.AccountData) => record.is_active === value,
-      width: 300,
+      width: 100,
       render(value) {
         return value ? "Active" : "InActive";
       },
@@ -58,6 +61,13 @@ const Management: React.FC = () => {
     {
       title: "Role",
       dataIndex: "role",
+      width: 150,
+      render(value, record, index) {
+        const found = permissionOptions.find((i: any) => i.id === record.permission_id) || {
+          permission_name: "unknown",
+        };
+        return found["permission_name"] || null;
+      },
     },
     {
       title: "Mobile",
@@ -67,13 +77,15 @@ const Management: React.FC = () => {
     {
       title: "Created At",
       dataIndex: "created_at",
-      sorter: (a: ACCOUNT.AccountData, b: ACCOUNT.AccountData) => sortDate(a.created_at || "", b.created_at || ""),
+      sorter: (a: ACCOUNT.AccountData, b: ACCOUNT.AccountData) =>
+        sortDate(a.created_at || "", b.created_at || ""),
       width: 300,
     },
     {
       title: "Updated At",
       dataIndex: "updated_at",
-      sorter: (a: ACCOUNT.AccountData, b: ACCOUNT.AccountData) => sortDate(a.updated_at || "", b.updated_at || ""),
+      sorter: (a: ACCOUNT.AccountData, b: ACCOUNT.AccountData) =>
+        sortDate(a.updated_at || "", b.updated_at || ""),
       width: 300,
     },
     {
@@ -92,11 +104,10 @@ const Management: React.FC = () => {
               ok-text="Yes"
               cancel-text="No"
               onConfirm={() => {
-                handleDeleteRole(record.id);
+                handelDeleteAccount(record.id);
               }}
-              disabled
             >
-              <Button type="link" danger disabled>
+              <Button type="link" danger>
                 Delete
               </Button>
             </Popconfirm>
@@ -106,7 +117,7 @@ const Management: React.FC = () => {
     },
   ];
 
-  const handleDeleteRole = (id: number) => {
+  const handelDeleteAccount = (id: number) => {
     setLoading(true);
     deleteAccounts({ id })
       .then(({ msg }) => {
@@ -121,7 +132,7 @@ const Management: React.FC = () => {
 
   const editRow = (recordData: ACCOUNT.AccountData) => {
     setEditingData(recordData);
-    singleDialogRef?.current?.toggle(true);
+    singleAccountDialogRef?.current?.toggle(true);
   };
 
   const getData = async () => {
@@ -135,9 +146,9 @@ const Management: React.FC = () => {
       });
   };
 
-  const handleAddRole = () => {
+  const handleAddAccount = () => {
     setEditingData({});
-    singleDialogRef?.current?.toggle(true);
+    singleAccountDialogRef?.current?.toggle(true);
   };
 
   const rowSelection = {
@@ -145,22 +156,23 @@ const Management: React.FC = () => {
       setSelectedUser(selectedRows);
     },
   };
-
   useEffect(() => {
+    getPermissions().then((response) => {
+      setPermissionOptions(response);
+    });
     setLoading(true);
     getData();
   }, []);
   return (
     <>
       <div>
-        <Button type="primary" size="small" onClick={() => handleAddRole()}>
+        <Button type="primary" size="small" onClick={() => handleAddAccount()}>
           ADD NEW USER
         </Button>
         <Button
           type="primary"
           danger
           size="small"
-          onClick={() => handleAddRole()}
           disabled={!selectedUser.length ? true : false}
           style={{ marginBottom: "10px", marginLeft: "10px" }}
         >
@@ -184,7 +196,12 @@ const Management: React.FC = () => {
           rowSelection={{ ...rowSelection }}
         />
       </div>
-      {/* <SinglePermissionDialog role={editingData} ref={singleDialogRef} getPermissionData={getData} /> */}
+      <SingleAccountDialog
+        accountData={editingData}
+        ref={singleAccountDialogRef}
+        permissionOptions={permissionOptions}
+        getAccountData={getData}
+      />
     </>
   );
 };

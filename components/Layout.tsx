@@ -42,13 +42,13 @@ const AppLayout = ({ children }: any) => {
   const [collapsed, setCollapsed] = useState(false);
   const sideMenuRoutes: MenuProps["items"] = [
     {
-      label: <a onClick={() => redirect("/overview")}>Overview</a>,
-      key: "overview",
+      label: <a onClick={() => redirect("/watch-list")}>Watch List</a>,
+      key: "watch-list",
       icon: <DashboardOutlined />,
     },
     {
-      label: <a onClick={() => redirect("/test")}>test</a>,
-      key: "test",
+      label: <a onClick={() => redirect("/work-space")}>Work Space</a>,
+      key: "work-space",
       icon: <ProjectOutlined />,
     },
   ];
@@ -66,7 +66,7 @@ const AppLayout = ({ children }: any) => {
         }}
       >
         <Logo>Risk Hub</Logo>
-        <Menu theme="dark" defaultOpenKeys={["overview"]} defaultSelectedKeys={["overview"]} items={sideMenuRoutes} mode="inline"></Menu>
+        <Menu theme="dark" defaultOpenKeys={["watch-list"]} defaultSelectedKeys={["watch-list"]} items={sideMenuRoutes} mode="inline"></Menu>
       </Sider>
 
       <Layout

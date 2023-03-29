@@ -15,7 +15,7 @@ const FourOhFour = () => {
         title="404"
         subTitle="Sorry, the page you visited does not exist."
         extra={
-          <Button type="primary" onClick={() => router.push("/overview")}>
+          <Button type="primary" onClick={() => router.push("/watch-list")}>
             Back Home
           </Button>
         }

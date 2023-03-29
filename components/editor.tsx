@@ -1,18 +1,21 @@
-import React from "react";
+import React, { useEffect } from "react";
 import AceEditor from "react-ace";
 
 import "ace-builds/src-noconflict/mode-json";
 import "ace-builds/src-noconflict/ext-language_tools";
-const Editor = ({ formRef }: any) => {
+
+const Editor = ({ formRef, readOnly = false }: any) => {
   const onChange = (newValue: string) => {
     formRef.setFieldValue("permission", newValue);
   };
+  // useEffect(() => {
+  //   console.log(formRef.getFieldsValue());
+  // }, []);
   return (
     <>
       <AceEditor
         style={{ width: "100%" }}
         mode="json"
-        theme="github"
         name="JSON_EDITOR"
         fontSize={14}
         value={formRef.getFieldValue("permission")}
@@ -20,8 +23,9 @@ const Editor = ({ formRef }: any) => {
         showGutter={true}
         highlightActiveLine={true}
         onChange={onChange}
+        readOnly={readOnly}
         setOptions={{
-          useWorker: true,
+          useWorker: false,
           enableBasicAutocompletion: true,
           enableSnippets: true,
           enableLiveAutocompletion: true,

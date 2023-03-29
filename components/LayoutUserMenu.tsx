@@ -1,11 +1,13 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Dropdown } from "antd";
 import { SettingOutlined, TeamOutlined, UserOutlined, PoweroffOutlined } from "@ant-design/icons";
 import { useRouter } from "next/router";
 import type { MenuProps } from "antd";
+import storage from "store";
 
 const AppLayoutUserMenu = () => {
   const router = useRouter();
+  const [username, setUsername] = useState("");
   const items: MenuProps["items"] = [
     {
       label: <a onClick={() => redirect("/account/management")}>Management</a>,
@@ -29,18 +31,20 @@ const AppLayoutUserMenu = () => {
 
   const redirect = (url: string) => {
     if (url === "/") {
-      localStorage.removeItem("refresh_token");
-      localStorage.removeItem("access_token");
+      storage.clearAll();
       router.push(url);
     } else {
       router.push(url);
     }
   };
+  useEffect(() => {
+    setUsername(storage.get("username"));
+  }, []);
 
   return (
     <Dropdown menu={{ items }} trigger={["click", "hover"]}>
       <div>
-        Hi, someone <UserOutlined style={{ fontSize: "20px" }} />
+        Hi, {username} <UserOutlined style={{ fontSize: "20px" }} />
       </div>
     </Dropdown>
   );

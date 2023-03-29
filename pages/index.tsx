@@ -48,11 +48,12 @@ const Login = () => {
 
   const submitForm = async (request: loginRequest) => {
     setLoading(true);
-    const { access_token, refresh_token, ...rest } = await login(request);
+    const { access_token, refresh_token, username, ...rest } = await login(request);
     storage.set(ACCESS_TOKEN_KEY, access_token);
     storage.set(REFRESH_TOKEN_KEY, refresh_token);
+    storage.set("username", username);
     setUserInfo(rest);
-    router.replace("/overview");
+    router.replace("/watch-list");
   };
   useEffect(() => {
     const token = storage.get(ACCESS_TOKEN_KEY);
@@ -60,7 +61,7 @@ const Login = () => {
       router.push("/");
       return;
     } else {
-      router.push("/overview");
+      router.push("/watch-list");
     }
   }, []);
 
@@ -72,8 +73,16 @@ const Login = () => {
         </LoginTitle>
 
         <FormContainer>
-          <CustomizedForm name="login_form" initialValues={{ remember: true }} onFinish={(value) => submitForm(value as loginRequest)} form={form}>
-            <Form.Item name="email" rules={[{ required: true, message: "Please enter your email" }, { type: "email" }]}>
+          <CustomizedForm
+            name="login_form"
+            initialValues={{ remember: true }}
+            onFinish={(value) => submitForm(value as loginRequest)}
+            form={form}
+          >
+            <Form.Item
+              name="email"
+              rules={[{ required: true, message: "Please enter your email" }, { type: "email" }]}
+            >
               <Input prefix={<UserOutlined />} type="email" placeholder="Email" />
             </Form.Item>
             <Form.Item
@@ -83,7 +92,11 @@ const Login = () => {
                 { min: 4, max: 16 },
               ]}
             >
-              <Input prefix={<LockOutlined />} type="password" placeholder="Please input password" />
+              <Input
+                prefix={<LockOutlined />}
+                type="password"
+                placeholder="Please input password"
+              />
             </Form.Item>
 
             <Form.Item>

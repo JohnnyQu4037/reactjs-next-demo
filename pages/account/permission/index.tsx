@@ -9,7 +9,7 @@ const Permission: React.FC = () => {
   const [dataSource, setDataSource] = useState([]);
   const [loading, setLoading] = useState(false);
   const [editingData, setEditingData] = useState({});
-  const singleDialogRef = useRef<any>();
+  const singlePermissionDialogRef = useRef<any>();
   const columns: ColumnsType<PERMISSION.PermissionData> = [
     {
       title: "ID",
@@ -76,7 +76,7 @@ const Permission: React.FC = () => {
 
   const editRow = (recordData: PERMISSION.PermissionData) => {
     setEditingData(recordData);
-    singleDialogRef?.current?.toggle(true);
+    singlePermissionDialogRef?.current?.toggle(true);
   };
 
   const getData = async () => {
@@ -92,7 +92,7 @@ const Permission: React.FC = () => {
 
   const handleAddRole = () => {
     setEditingData({});
-    singleDialogRef?.current?.toggle(true);
+    singlePermissionDialogRef?.current?.toggle(true);
   };
   useEffect(() => {
     setLoading(true);
@@ -121,7 +121,7 @@ const Permission: React.FC = () => {
           }}
         />
       </div>
-      <SinglePermissionDialog role={editingData} ref={singleDialogRef} getPermissionData={getData} />
+      <SinglePermissionDialog role={editingData} ref={singlePermissionDialogRef} getPermissionData={getData} />
     </>
   );
 };
