@@ -4,7 +4,7 @@ import { SettingOutlined, TeamOutlined, UserOutlined, PoweroffOutlined } from "@
 import { useRouter } from "next/router";
 import type { MenuProps } from "antd";
 
-export default function AppLayoutUserMenu() {
+const AppLayoutUserMenu = () => {
   const router = useRouter();
   const items: MenuProps["items"] = [
     {
@@ -44,4 +44,6 @@ export default function AppLayoutUserMenu() {
       </div>
     </Dropdown>
   );
-}
+};
+
+export default AppLayoutUserMenu;

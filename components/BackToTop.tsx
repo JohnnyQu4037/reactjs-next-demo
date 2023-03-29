@@ -16,20 +16,20 @@ const ToTop = styled(VerticalAlignTopOutlined)`
   }
 `;
 
-export default function BackToTop() {
+const BackToTop: React.FC = () => {
   const [shown, setShown] = useState(false);
 
   useEffect(() => {
     const element = document.getElementById("contentLayout");
-    const listener = (event) => {
+    const listener = (event:any) => {
       const visible = event.target.scrollTop > 600;
 
       setShown(visible);
     };
-    element.addEventListener("scroll", listener);
+    element?.addEventListener("scroll", listener);
 
     return () => {
-      element.removeEventListener("scroll", listener);
+      element?.removeEventListener("scroll", listener);
     };
   }, [shown]);
 
@@ -38,8 +38,10 @@ export default function BackToTop() {
       onClick={() => {
         const element = document.getElementById("contentLayout");
 
-        element.scrollTo({ top: 0, behavior: "smooth" });
+        element?.scrollTo({ top: 0, behavior: "smooth" });
       }}
     />
   ) : null;
-}
+};
+
+export default BackToTop;

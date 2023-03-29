@@ -4,7 +4,7 @@ import { Spin } from "antd";
 import type { AppProps } from "next/app";
 import "../styles/globals.css";
 
-function MyApp({ Component, pageProps, router }: AppProps) {
+const MyApp = ({ Component, pageProps, router }: AppProps) => {
   if (!(router.pathname === "/" || router.pathname === "/_error")) {
     return (
       <AppLayout>

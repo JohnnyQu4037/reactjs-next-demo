@@ -1,6 +1,6 @@
 declare namespace ACCOUNT {
     interface ModifyAccountData {
-        id?: number;
+        id: number;
         email?: string;
         password?: string | null;
         username?: string;

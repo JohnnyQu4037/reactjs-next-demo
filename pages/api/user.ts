@@ -1,24 +1,32 @@
-import request from '@/utils/request';
+import request from "@/utils/request";
 
-export function getAccounts() {
-    return request({
-        url: 'user',
-        method: 'GET',
-    });
-}
+export const getAccounts = () => {
+  return request({
+    url: "user",
+    method: "GET",
+  });
+};
 
-export function updateAccount(data: ACCOUNT.ModifyAccountData[]) {
-    return request({
-        url: 'user',
-        method: 'PUT',
-        data,
-    });
-}
+export const updateAccount = (data: ACCOUNT.ModifyAccountData[]) => {
+  return request({
+    url: "user",
+    method: "PUT",
+    data,
+  });
+};
 
-export function createAccount(data: ACCOUNT.ModifyAccountData) {
-    return request({
-        url: 'user',
-        method: 'POST',
-        data,
-    });
-}
+export const createAccount = (data: ACCOUNT.ModifyAccountData) => {
+  return request({
+    url: "user",
+    method: "POST",
+    data,
+  });
+};
+
+export const deleteAccounts = (data: { id: number }) => {
+  return request({
+    url: "user",
+    method: "delete",
+    data,
+  });
+};

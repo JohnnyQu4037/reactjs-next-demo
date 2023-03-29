@@ -33,25 +33,20 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   async (response: AxiosResponse) => {
     const res = response.data;
-    if (response.status !== HTTP_STATUS_OK) {
-      $message.error(res.message || UNKNOWN_ERROR);
-      const error = new Error(res.message || UNKNOWN_ERROR);
-      return Promise.reject(error);
-    } else {
-      return res;
-    }
+
+    return res;
   },
   (error) => {
     // 422 || 500
-    if (error.response.status === HTTP_STATUS_UNAUTHORIZED) {
+    if (error.code === AXIOS_TIMEOUT) {
+      $message.error("time out!");
+    } else if (error.response.status === HTTP_STATUS_UNAUTHORIZED) {
       $message.error(error?.response?.data?.msg);
       setTimeout(() => {
         window.location.replace(window.location.origin);
       }, 2000);
-    } else if (error.code === AXIOS_TIMEOUT) {
-      $message.error("time out!");
     } else {
-      const errMsg = error?.response?.data?.message ?? UNKNOWN_ERROR;
+      const errMsg = error?.response?.data?.message || error?.response?.data?.msg || UNKNOWN_ERROR;
       $message.error(errMsg);
       error.message = errMsg;
     }

@@ -40,28 +40,27 @@ export const LoginTitle = styled.div`
   align-items: center;
 `;
 
-export default function Login() {
+const Login = () => {
   const [form] = Form.useForm();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [userInfo,setUserInfo] = useState([])
+  const [userInfo, setUserInfo] = useState([]);
 
   const submitForm = async (request: loginRequest) => {
     setLoading(true);
     const { access_token, refresh_token, ...rest } = await login(request);
     storage.set(ACCESS_TOKEN_KEY, access_token);
-    storage.set(REFRESH_TOKEN_KEY,refresh_token)
+    storage.set(REFRESH_TOKEN_KEY, refresh_token);
     setUserInfo(rest);
     router.replace("/overview");
   };
   useEffect(() => {
-    const token = storage.get(ACCESS_TOKEN_KEY)
+    const token = storage.get(ACCESS_TOKEN_KEY);
     if (!token) {
       router.push("/");
       return;
-    }
-    else{
-      router.push('/overview');
+    } else {
+      router.push("/overview");
     }
   }, []);
 
@@ -97,4 +96,6 @@ export default function Login() {
       </LoginBox>
     </>
   );
-}
+};
+
+export default Login;

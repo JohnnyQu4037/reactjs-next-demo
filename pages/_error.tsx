@@ -2,11 +2,11 @@ import { Result, Button } from "antd";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 
-export default function FourOhFour() {
+const FourOhFour = () => {
   const router = useRouter();
   useEffect(() => {
     console.log("shit");
-    console.log(router.pathname)
+    console.log(router.pathname);
   }, []);
   return (
     <>
@@ -22,4 +22,6 @@ export default function FourOhFour() {
       />
     </>
   );
-}
+};
+
+export default FourOhFour;

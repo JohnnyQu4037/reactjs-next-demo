@@ -1,145 +1,129 @@
-import React, { useEffect } from "react";
-import { Button, Table } from "antd";
-import { getPermissions, updatePermission, createPermission, deletePermission } from "@/pages/api/permission";
+import { getPermissions, deletePermission } from "@/pages/api/permission";
+import { Button, Popconfirm, Table } from "antd";
+import type { ColumnsType } from "antd/es/table";
+import React, { useEffect, useRef, useState } from "react";
+import { message as $message } from "antd";
+import SinglePermissionDialog from "./components/SinglePermissionDialog";
 
-async function getData() {
-  const response = await getPermissions();
-  const data = response.data;
-  console.log(data);
-}
-function Permission() {
+const Permission: React.FC = () => {
+  const [dataSource, setDataSource] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [editingData, setEditingData] = useState({});
+  const singleDialogRef = useRef<any>();
+  const columns: ColumnsType<PERMISSION.PermissionData> = [
+    {
+      title: "ID",
+      dataIndex: "id",
+      width: 100,
+    },
+    {
+      title: "Role",
+      dataIndex: "permission_name",
+      width: 300,
+    },
+    {
+      title: "Created At",
+      dataIndex: "created_at",
+      width: 300,
+    },
+    {
+      title: "Updated At",
+      dataIndex: "updated_at",
+      width: 300,
+    },
+    {
+      title: "Operation",
+      key: "operation",
+      width: 300,
+      render: (_, record: PERMISSION.PermissionData) => {
+        return (
+          <>
+            <Button type="link" onClick={() => editRow(record)}>
+              Modify
+            </Button>
+            /
+            <Popconfirm
+              title="Are you sure to remove?"
+              ok-text="Yes"
+              cancel-text="No"
+              onConfirm={() => {
+                handleDeleteRole(record.id);
+              }}
+            >
+              <Button type="link" danger>
+                {" "}
+                Remove{" "}
+              </Button>
+            </Popconfirm>
+          </>
+        );
+      },
+    },
+  ];
+
+  const handleDeleteRole = (id: number) => {
+    setLoading(true);
+    deletePermission({ id })
+      .then(({ msg }) => {
+        $message.success(msg);
+        setLoading(false);
+        getData();
+      })
+      .catch(() => {
+        setLoading(false);
+      });
+  };
+
+  const editRow = (recordData: PERMISSION.PermissionData) => {
+    setEditingData(recordData);
+    singleDialogRef?.current?.toggle(true);
+  };
+
+  const getData = async () => {
+    await getPermissions()
+      .then((response) => {
+        setDataSource(response);
+        setLoading(false);
+      })
+      .catch(() => {
+        setLoading(false);
+      });
+  };
+
+  const handleAddRole = () => {
+    setEditingData({});
+    singleDialogRef?.current?.toggle(true);
+  };
   useEffect(() => {
+    setLoading(true);
     getData();
   }, []);
   return (
     <>
       <div>
-        <Button type="primary" size="small" onClick={() => "handleAddRole"}>
+        <Button type="primary" size="small" onClick={() => handleAddRole()} style={{ marginBottom: "10px" }}>
           ADD NEW ROLE
         </Button>
-        {/* <Table
+        <Table
+          size={"small"}
           dataSource={dataSource}
           columns={columns}
-          rowKey="(record: PERMISSION.PermissionData) => record.id"
+          rowKey={(record: PERMISSION.PermissionData) => record.id?.toString() || "UNKNOWN_ID" + record.permission_name}
           loading={loading}
-          // :pagination="pagination"
-        /> */}
+          pagination={{
+            total: dataSource.length,
+            position: ["bottomRight"],
+            showTotal: (total) => `Total ${total} items`,
+            defaultPageSize: 20,
+            defaultCurrent: 1,
+            pageSizeOptions: [10, 20, 30, 40],
+            showSizeChanger: true,
+          }}
+        />
       </div>
+      <SinglePermissionDialog role={editingData} ref={singleDialogRef} getPermissionData={getData} />
     </>
   );
-}
+};
 
-// <template>
-//
-//         <single-permission-dialog
-//             ref="singleDialogRef"
-//             :role="state.editing"
-//             @submit="run"
-//         />
-//     </div>
-// </template>
-// <script setup lang="ts">
-// import { ref, reactive, watch } from 'vue';
-// import type { TableColumnsType } from 'ant-design-vue';
-// import { usePagination } from 'vue-request';
-// import { getPermissions, deletePermission } from '@/api/permission';
-// import SinglePermissionDialog from './components/SinglePermissionDialog.vue';
-// import { usePermissionStore } from '@/store/modules/permission';
-
-// const columns: TableColumnsType = [
-//     {
-//         title: 'ID',
-//         dataIndex: 'id',
-//         width: 100,
-//     },
-//     {
-//         title: 'Role',
-//         dataIndex: 'permission_name',
-//         width: 300,
-//     },
-//     {
-//         title: 'Created At',
-//         dataIndex: 'created_at',
-//         width: 300,
-//     },
-//     {
-//         title: 'Updated At',
-//         dataIndex: 'updated_at',
-//         width: 300,
-//     },
-//     {
-//         title: 'Operation',
-//         key: 'operation',
-//         width: 300,
-//     },
-// ];
-
-// const singleDialogRef = ref();
-// const permissionStore = usePermissionStore();
-
-// const {
-//     data: dataSource,
-//     run,
-//     loading,
-//     current,
-//     pageSize,
-//     total,
-//     ...rest
-// } = usePagination(getPermissions, {
-//     formatResult: (res) => res,
-//     pagination: {
-//         totalKey: 'length',
-//     },
-// });
-
-// const pagination = reactive({
-//     total,
-//     showTotal: (total: number) => `Total ${total} items`,
-//     showSizeChanger: true,
-//     defaultPageSize: 20,
-//     pageSizeOptions: [10, 20, 30, 40],
-// });
-// const state = reactive<{
-//     editing: PERMISSION.PermissionData | object;
-// }>({
-//     editing: {},
-// });
-
-// const editRow = (record: PERMISSION.PermissionData) => {
-//     state.editing = record;
-//     singleDialogRef.value.toggle();
-// };
-
-// const handleAddRole = () => {
-//     state.editing = {};
-//     singleDialogRef.value.toggle();
-// };
-
-// const handleDeleteRole = (id: number) => {
-//     return new Promise((resolve) => {
-//         deletePermission({ id })
-//             .then(() => {
-//                 run();
-//             })
-//             .catch((e) => {
-//                 console.log(e);
-//             })
-//             .finally(() => {
-//                 resolve(true);
-//             });
-//     });
-// };
-
-// watch(dataSource, (val) => {
-//     // update permission store
-//     permissionStore.setPermissions(val);
-// });
-// </script>
-// <style lang="less" scoped>
-// .permission-manager {
-//     .btns {
-//         margin-bottom: 16px;
-//     }
-// }
-// </style>
 export default Permission;

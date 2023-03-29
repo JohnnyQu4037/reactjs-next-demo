@@ -1,3 +1,5 @@
-export default function Overview() {
+const Overview = () => {
   return null;
-}
+};
+
+export default Overview;

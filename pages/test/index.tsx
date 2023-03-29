@@ -1,3 +1,4 @@
-export default function test() {
+const test = () => {
   return null;
-}
+};
+export default test;

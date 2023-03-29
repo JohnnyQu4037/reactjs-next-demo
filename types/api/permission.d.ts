@@ -42,7 +42,7 @@ declare namespace PERMISSION {
     }
 
     interface PermissionData {
-        id?: number;
+        id: number;
         permission_name: string;
         permission: PermissionContent[];
         created_at?: string | null;

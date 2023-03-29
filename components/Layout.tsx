@@ -37,7 +37,7 @@ const StyledHeader = styled(Header)`
   background: white;
 `;
 
-export default function AppLayout({ children }: any) {
+const AppLayout = ({ children }: any) => {
   const router = useRouter();
   const [collapsed, setCollapsed] = useState(false);
   const sideMenuRoutes: MenuProps["items"] = [
@@ -93,4 +93,6 @@ export default function AppLayout({ children }: any) {
       </Layout>
     </Layout>
   );
-}
+};
+
+export default AppLayout;

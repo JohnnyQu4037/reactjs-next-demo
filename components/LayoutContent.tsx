@@ -9,6 +9,7 @@ const StyledContent = styled.div`
   flex: auto;
 `;
 
-export default function AppLayoutContent({ children }: any) {
+const AppLayoutContent = ({ children }: any) => {
   return <StyledContent>{children}</StyledContent>;
-}
+};
+export default AppLayoutContent;

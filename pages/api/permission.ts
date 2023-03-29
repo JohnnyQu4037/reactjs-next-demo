@@ -1,32 +1,32 @@
 import request from "@/utils/request";
 
-export function getPermissions() {
+export const getPermissions = () => {
   return request({
     url: "permission",
     method: "GET",
   });
-}
+};
 
-export function updatePermission(data: PERMISSION.FrontPermission) {
+export const updatePermission = (data: { id: number; permission_name: string; permission: object }) => {
   return request({
     url: "permission",
     method: "PUT",
     data,
   });
-}
+};
 
-export function createPermission(data: PERMISSION.FrontPermission) {
+export const createPermission = (data: { permission_name: string; permission: object }) => {
   return request({
     url: "permission",
     method: "POST",
     data,
   });
-}
+};
 
-export function deletePermission(data: PERMISSION.FrontPermission) {
+export const deletePermission = (data: { id: number }) => {
   return request({
     url: "permission",
     method: "DELETE",
     data,
   });
-}
+};

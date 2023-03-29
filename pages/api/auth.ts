@@ -1,9 +1,9 @@
-import request from '@/utils/request';
+import request from "@/utils/request";
 
-export function login(data: AUTH.LoginForm) {
-    return request({
-        url: 'auth',
-        method: 'POST',
-        data,
-    });
-}
+export const login = (data: AUTH.LoginForm) => {
+  return request({
+    url: "auth",
+    method: "POST",
+    data,
+  });
+};
