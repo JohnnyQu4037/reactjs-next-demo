@@ -40,7 +40,7 @@ service.interceptors.response.use(
     // 422 || 500
     if (error.code === AXIOS_TIMEOUT) {
       $message.error("time out!");
-    } else if (error.response.status === HTTP_STATUS_UNAUTHORIZED) {
+    } else if (error?.response?.status === HTTP_STATUS_UNAUTHORIZED) {
       $message.error(error?.response?.data?.msg);
       setTimeout(() => {
         window.location.replace(window.location.origin);

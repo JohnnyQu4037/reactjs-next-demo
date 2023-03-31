@@ -5,7 +5,6 @@ import { useEffect } from "react";
 const FourOhFour = () => {
   const router = useRouter();
   useEffect(() => {
-    console.log("shit");
     console.log(router.pathname);
   }, []);
   return (

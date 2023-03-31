@@ -1,14 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import GridLayout from "react-grid-layout";
 import styled from "styled-components";
-import { Button } from "antd";
 import BookFundPerformance from "@/components/chartTemplate/BookFundPerformance";
 import LpFlow from "@/components/chartTemplate/LpFlow";
 import LpFlowBySecurity from "@/components/chartTemplate/LpFlowBySecurity";
 import { getPkBook } from "@/api/book";
 import { useDispatch, useSelector } from "react-redux";
 import { setBookOptions } from "@/store/bookSlice";
-import { layout } from "@/store/layoutSlice";
+import { layout, setChartLayout } from "@/store/layoutSlice";
 import useWindowSize from "@/utils/window-size";
 
 const GridItem = styled.div`
@@ -22,14 +21,8 @@ const WorkSpace = () => {
 
   const windowSize = useWindowSize();
 
-  const [chartLayout, setChartLayout] = useState([
-    { i: "LpFlow_1", x: 0, y: 0, w: 12, h: 600, minW: 12, minH: 200 },
-    { i: "LpFlowBySecurity_2", x: 12, y: 0, w: 12, h: 600, minW: 12, minH: 200 },
-    { i: "BookFundPerformance_3", x: 24, y: 0, w: 12, h: 600, minW: 12, minH: 200 },
-  ]);
-
   const generateDOM = () => {
-    return chartLayout.map(({ i, h }) => {
+    return layoutState.chartLayout.map(({ i, h }) => {
       const type = i.split("_")[0];
       switch (type) {
         case "LpFlow":
@@ -63,26 +56,10 @@ const WorkSpace = () => {
   };
 
   const onLayoutChange = (newPosition: any) => {
-    setChartLayout(newPosition);
+    dispatch(setChartLayout(newPosition));
   };
   const onResize = (chartLayout: any) => {
-    setChartLayout(chartLayout);
-  };
-
-  const addOne = () => {
-    const lastOne = chartLayout[chartLayout.length - 1];
-    setChartLayout([
-      ...chartLayout,
-      {
-        i: lastOne.i.split("_")[0] + "_" + lastOne.i.split("_")[1] + 1,
-        x: 0,
-        y: 0,
-        w: 12,
-        h: 200,
-        minW: 12,
-        minH: 200,
-      },
-    ]);
+    dispatch(setChartLayout(chartLayout));
   };
 
   useEffect(() => {
@@ -93,12 +70,9 @@ const WorkSpace = () => {
 
   return (
     <>
-      {layoutState.isCollapsed ? "true" : "false"}
-      <Button onClick={addOne}>add</Button>
-      {windowSize.width}px
       <GridLayout
         width={windowSize.width - (layoutState.isCollapsed ? 150 : 270)}
-        layout={chartLayout}
+        layout={layoutState.chartLayout}
         cols={36}
         rowHeight={1}
         useCSSTransforms={true}

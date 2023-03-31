@@ -15,7 +15,6 @@ type RangeValue = [dayjs.Dayjs, dayjs.Dayjs];
 
 const BookFundPerformance = ({ height, chartId }: any) => {
   const bookState = useSelector(book);
-  console.log(bookState.bookOptions);
 
   const windowSize = useWindowSize();
 

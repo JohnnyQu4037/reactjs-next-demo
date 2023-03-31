@@ -1,5 +1,6 @@
 import { Breadcrumb } from "antd";
 import { useRouter } from "next/router";
+import WorkSpaceButtons from "@/components/WorkSpaceButtons";
 
 type breadcrumbItems = {
   title: string | undefined;
@@ -26,7 +27,12 @@ const LayoutBreadcrumb: React.FC = () => {
   };
 
   return (
-    <Breadcrumb items={breadcrumbItems()} style={{ padding: "16px 16px 0px 16px" }}></Breadcrumb>
+    <div>
+      <Breadcrumb items={breadcrumbItems()} style={{ padding: "16px 16px 0px 16px", display: "inline-block" }}></Breadcrumb>
+      {router.pathname.includes("work-space") ? (
+        <WorkSpaceButtons v-if="route.path === '/work-space'" />
+      ) : null}
+    </div>
   );
 };
 
