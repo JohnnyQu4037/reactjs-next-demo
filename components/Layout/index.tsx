@@ -7,6 +7,8 @@ import LayoutBreadcrumb from "./LayoutBreadcrumb";
 import AppLayoutContent from "./LayoutContent";
 import AppLayoutUserMenu from "./LayoutUserMenu";
 import { DashboardOutlined, ProjectOutlined } from "@ant-design/icons";
+import { useSelector, useDispatch } from "react-redux";
+import { layout, setCollapseStatus } from "@/store/layoutSlice";
 
 const { Header, Sider } = Layout;
 
@@ -38,8 +40,10 @@ const StyledHeader = styled(Header)`
 `;
 
 const AppLayout = ({ children }: any) => {
+  const dispatch = useDispatch();
+  const layoutState = useSelector(layout);
+
   const router = useRouter();
-  const [collapsed, setCollapsed] = useState(false);
   const sideMenuRoutes: MenuProps["items"] = [
     {
       label: <a onClick={() => redirect("/watch-list")}>Watch List</a>,
@@ -60,13 +64,13 @@ const AppLayout = ({ children }: any) => {
     <Layout style={{ height: "100vh" }}>
       <Sider
         collapsible
-        collapsed={collapsed}
+        collapsed={layoutState.isCollapsed}
         onCollapse={() => {
-          setCollapsed(!collapsed);
+          dispatch(setCollapseStatus(!layoutState.isCollapsed));
         }}
       >
         <Logo>Risk Hub</Logo>
-        <Menu theme="dark" defaultOpenKeys={["watch-list"]} defaultSelectedKeys={["watch-list"]} items={sideMenuRoutes} mode="inline"></Menu>
+        <Menu theme="dark" items={sideMenuRoutes} mode="inline"></Menu>
       </Sider>
 
       <Layout
@@ -76,10 +80,10 @@ const AppLayout = ({ children }: any) => {
         }}
       >
         <StyledHeader>
-          {React.createElement(collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
+          {React.createElement(layoutState.isCollapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
             className: "trigger",
             onClick: () => {
-              setCollapsed(!collapsed);
+              dispatch(setCollapseStatus(!layoutState.isCollapsed));
             },
             style: { fontSize: "20px" },
           })}

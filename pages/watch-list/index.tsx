@@ -1,8 +1,12 @@
+import { useState, useEffect } from "react";
+import useWindowSize from "@/utils/window-size";
+
 const WatchList = () => {
+  const size = useWindowSize();
   return (
-    <>
-      <div>hello, this is watch list page</div>
-    </>
+    <div>
+      {size.width}px / {size.height}px
+    </div>
   );
 };
 

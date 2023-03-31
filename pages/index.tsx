@@ -2,7 +2,7 @@ import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Form, Input } from "antd";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
-import { login } from "@/pages/api/auth";
+import { login } from "@/api/auth";
 import React, { useEffect, useState } from "react";
 export interface loginRequest {
   email: string;

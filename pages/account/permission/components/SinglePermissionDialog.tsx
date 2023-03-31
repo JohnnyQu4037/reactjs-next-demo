@@ -1,6 +1,6 @@
 import React, { useEffect, useState, forwardRef, useImperativeHandle } from "react";
 import { Modal, Form, Input } from "antd";
-import { updatePermission, createPermission } from "@/pages/api/permission";
+import { updatePermission, createPermission } from "@/api/permission";
 import { message as $message } from "antd";
 import dynamic from "next/dynamic";
 
@@ -65,19 +65,24 @@ const SinglePermissionDialog = forwardRef(({ role, getPermissionData }: any, ref
   };
 
   useEffect(() => {
-    if (role.id) {
-      setState({
-        title: `Modify Role ${role.permission_name}`,
-        okText: "Update",
-      });
-      form.setFieldsValue({ permission_name: role.permission_name, permission: JSON.stringify(role.permission, null, 2) });
-    } else {
-      setState({
-        title: "Add New Role",
-        okText: "Create",
-      });
+    if (visible) {
+      if (role.id) {
+        setState({
+          title: `Modify Role ${role.permission_name}`,
+          okText: "Update",
+        });
+        form.setFieldsValue({
+          permission_name: role.permission_name,
+          permission: JSON.stringify(role.permission, null, 2),
+        });
+      } else {
+        setState({
+          title: "Add New Role",
+          okText: "Create",
+        });
+      }
     }
-  }, [role]);
+  }, [visible]);
 
   return (
     <>

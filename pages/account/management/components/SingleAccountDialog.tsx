@@ -3,7 +3,7 @@ import { Col, Form, Input, message as $message, Modal, Row, Select } from "antd"
 import dynamic from "next/dynamic";
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import type { Rule } from "antd/es/form";
-import { updateAccount, createAccount } from "@/pages/api/user";
+import { updateAccount, createAccount } from "@/api/user";
 
 const Ace = dynamic(() => import("@/components/editor"), { ssr: false });
 
@@ -77,28 +77,30 @@ const SingleAccountDialog = forwardRef(
     };
 
     useEffect(() => {
-      if (accountData.id) {
-        setState({
-          title: `Update Account`,
-          okText: "Update",
-        });
-        accountForm.setFieldsValue({
-          email: accountData.email,
-          password: "",
-          username: accountData.username,
-          first_name: accountData.first_name,
-          last_name: accountData.last_name,
-          mobile: accountData.mobile,
-          permission_id: accountData.permission_id,
-          permission: findPermission(accountData.permission_id),
-        });
-      } else {
-        setState({
-          title: "Create New Account",
-          okText: "Create",
-        });
+      if (visible) {
+        if (accountData.id) {
+          setState({
+            title: `Update Account`,
+            okText: "Update",
+          });
+          accountForm.setFieldsValue({
+            email: accountData.email,
+            password: "",
+            username: accountData.username,
+            first_name: accountData.first_name,
+            last_name: accountData.last_name,
+            mobile: accountData.mobile,
+            permission_id: accountData.permission_id,
+            permission: findPermission(accountData.permission_id),
+          });
+        } else {
+          setState({
+            title: "Create New Account",
+            okText: "Create",
+          });
+        }
       }
-    }, [accountData]);
+    }, [visible]);
 
     return (
       <>

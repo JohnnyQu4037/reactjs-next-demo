@@ -1,12 +1,12 @@
-import { getAccounts, deleteAccounts } from "@/pages/api/user";
+import { getAccounts, deleteAccounts } from "@/api/user";
 import { Button, Popconfirm, Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { sortString, sortDate } from "@/utils";
 import React, { useEffect, useRef, useState } from "react";
-import { getPermissions } from "@/pages/api/permission";
+import { getPermissions } from "@/api/permission";
 import { message as $message } from "antd";
-
 import SingleAccountDialog from "./components/SingleAccountDialog";
+import BatchAccountDialog from "./components/BatchAccountDialog";
 
 const Management: React.FC = () => {
   const [dataSource, setDataSource] = useState([]);
@@ -14,6 +14,8 @@ const Management: React.FC = () => {
   const [editingData, setEditingData] = useState({});
   const [selectedUser, setSelectedUser] = useState<ACCOUNT.AccountData[]>([]);
   const singleAccountDialogRef = useRef<any>();
+  const batchAccountDialogRef = useRef<any>();
+
   const [permissionOptions, setPermissionOptions] = useState([]);
   const columns: ColumnsType<ACCOUNT.AccountData> = [
     {
@@ -151,6 +153,11 @@ const Management: React.FC = () => {
     singleAccountDialogRef?.current?.toggle(true);
   };
 
+  const handleBatchUpdate = () => {
+    setEditingData(selectedUser);
+    batchAccountDialogRef?.current?.toggle(true);
+  };
+
   const rowSelection = {
     onChange: (_: any, selectedRows: ACCOUNT.AccountData[]) => {
       setSelectedUser(selectedRows);
@@ -175,6 +182,9 @@ const Management: React.FC = () => {
           size="small"
           disabled={!selectedUser.length ? true : false}
           style={{ marginBottom: "10px", marginLeft: "10px" }}
+          onClick={() => {
+            handleBatchUpdate();
+          }}
         >
           UPDATE PERMISSION
         </Button>
@@ -199,6 +209,12 @@ const Management: React.FC = () => {
       <SingleAccountDialog
         accountData={editingData}
         ref={singleAccountDialogRef}
+        permissionOptions={permissionOptions}
+        getAccountData={getData}
+      />
+      <BatchAccountDialog
+        ref={batchAccountDialogRef}
+        accountData={editingData}
         permissionOptions={permissionOptions}
         getAccountData={getData}
       />

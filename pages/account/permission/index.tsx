@@ -1,4 +1,4 @@
-import { getPermissions, deletePermission } from "@/pages/api/permission";
+import { getPermissions, deletePermission } from "@/api/permission";
 import { Button, Popconfirm, Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import React, { useEffect, useRef, useState } from "react";
